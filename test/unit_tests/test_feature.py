@@ -3,7 +3,6 @@ import torch
 from genrecog.preprocess.feature import Feature
 
 
-
 def test_torch_fbank_features():
     feature_maker = Feature(sample_rate=16_000, n_fft=400)
     tensor = torch.rand([10, 16_000])

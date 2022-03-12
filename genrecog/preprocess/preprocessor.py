@@ -15,11 +15,11 @@ class Preprocessor:
             path,
     ):
         self.path = path
-        # self.X = None
-        # self.y = None
-        # with np.load(self.path) as data:
-        #     self.X = data['X'].astype(np.float32)
-        #     self.y = data['y'].astype(np.int64)
+        self.X = None
+        self.y = None
+        with np.load(self.path) as data:
+            self.X = data['X'].astype(np.float32)
+            self.y = data['y'].astype(np.int64)
 
     def as_numpy(self):
         with np.load(self.path) as data:
