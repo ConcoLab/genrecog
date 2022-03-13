@@ -22,7 +22,7 @@ class Feature:
 
     def numpy_fbank_features(self, X):
         X = torch.from_numpy(X)
-        return self.feature_maker(X).cpu().detach().numpy
+        return self.feature_maker(X).cpu().detach().numpy()
 
     def torch_mfcc_features(self, x):
         return self.mfcc_maker(x)
