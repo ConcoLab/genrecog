@@ -42,7 +42,3 @@ class Preprocessor:
     def as_shuffled_torch(self):
         X, y = self.as_shuffled_numpy()
         return torch.from_numpy(X), torch.from_numpy(y)
-
-
-
-
