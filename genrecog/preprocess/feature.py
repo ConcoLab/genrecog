@@ -21,5 +21,5 @@ class Feature:
 
     def numpy_fbank_features(self, X):
         X = torch.from_numpy(X)
-        return self.feature_maker(X).cpu().detach().numpy
+        return self.feature_maker(X).cpu().detach().numpy()
 
