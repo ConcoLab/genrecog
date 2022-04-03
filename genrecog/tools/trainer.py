@@ -38,7 +38,7 @@ class FbankTrainer():
         plt.plot(self.validation_accuracies)
         plt.legend(['Training Accuracy', 'Validation Accuracy'])
         plt.xlabel('epoch')
-        plt.ylabel('accuracy %')
+        plt.ylabel('accuracy')
         plt.title(title)
 
     def plot_confusion_matrix(self, eval_loader):
