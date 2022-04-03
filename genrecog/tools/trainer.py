@@ -29,15 +29,15 @@ class FbankTrainer():
         plt.plot(self.train_losses)
         plt.plot(self.validation_losses)
         plt.legend(['Training loss', 'Validation loss'])
-        plt.xlabel('loss')
-        plt.ylabel('epoch')
+        plt.xlabel('epoch')
+        plt.ylabel('loss')
 
     def plot_accuracies(self):
         plt.plot(self.train_accuracies)
         plt.plot(self.validation_accuracies)
         plt.legend(['Training Accuracy', 'Validation Accuracy'])
-        plt.xlabel('accuracy %')
-        plt.ylabel('epoch')
+        plt.xlabel('epoch')
+        plt.ylabel('accuracy %')
 
     def plot_confusion_matrix(self, eval_loader):
         y_pred, y_eval, validation_loss, validation_accuracy = self.eval(eval_loader)
