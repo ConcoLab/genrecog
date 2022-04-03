@@ -7,7 +7,7 @@ Authors
 import torch
 
 class VanillaRNN(torch.nn.Module):
-    def __init__(self, input_size=40, time_sequence=702, hidden_size=128, num_layers=5, output_dim=10):
+    def __init__(self, input_size=40, time_sequence=702, hidden_size=128, num_layers=5, output_dim=10, use_mean=False):
         super(VanillaRNN, self).__init__()
 
         self.batch_norm_input = torch.nn.BatchNorm1d(time_sequence)
@@ -22,12 +22,13 @@ class VanillaRNN(torch.nn.Module):
 
         self.batch_norm_hidden = torch.nn.BatchNorm1d(hidden_size)
         self.linear = torch.nn.Linear(hidden_size, output_dim)
+        self.use_mean = use_mean
 
     def forward(self, X, hidden=None, use_mean=False):
         X = self.batch_norm_input(X)
         Z, hidden = self.rnn(X, hidden)
         self.Z = Z
-        if use_mean:
+        if self.use_mean:
             z = torch.mean(self.Z, 1)
         else:
             z = self.Z[:, -1, :]
