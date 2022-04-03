@@ -25,19 +25,21 @@ class FbankTrainer():
     def accuracy(self, y_true, y_pred):
         return (torch.sum(y_true == y_pred) / y_pred.shape[0])
 
-    def plot_loss(self):
+    def plot_loss(self, title):
         plt.plot(self.train_losses)
         plt.plot(self.validation_losses)
         plt.legend(['Training loss', 'Validation loss'])
         plt.xlabel('epoch')
         plt.ylabel('loss')
+        plt.title(title)
 
-    def plot_accuracies(self):
+    def plot_accuracies(self, title):
         plt.plot(self.train_accuracies)
         plt.plot(self.validation_accuracies)
         plt.legend(['Training Accuracy', 'Validation Accuracy'])
         plt.xlabel('epoch')
         plt.ylabel('accuracy %')
+        plt.title(title)
 
     def plot_confusion_matrix(self, eval_loader):
         y_pred, y_eval, validation_loss, validation_accuracy = self.eval(eval_loader)
