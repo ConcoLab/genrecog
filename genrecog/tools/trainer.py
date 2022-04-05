@@ -102,4 +102,47 @@ class RNNFbankTrainer(FbankTrainer):
             accuracy = self.accuracy(y_val, y_pred)
         return y_pred, y_val, l.item(), accuracy.item()
 
+class CNNFbankTrainer(FbankTrainer):
+
+    def train(self):
+        for epoch in range(self.num_epochs):
+            self.model.train()
+            epoch_losses = []
+            epoch_accuracies = []
+            for X_train, y_train in self.train_dataloader:
+                self.model.zero_grad()
+                X_features = self.feature_maker.torch_fbank_features(X_train)
+                y_hat = self.model(X_features)
+                l = self.loss(y_hat, y_train)
+                l.backward()
+                self.optimizer.step()
+                epoch_losses.append(l.item())
+                epoch_accuracies.append(self.accuracy(y_train, torch.argmax(y_hat, dim=1)).item())
+
+            training_loss = sum(epoch_losses) / len(epoch_losses)
+            training_accuracy = sum(epoch_accuracies) / len(epoch_accuracies)
+            self.train_accuracies.append(training_accuracy)
+            self.train_losses.append(training_loss)
+            y_pred, y_eval, validation_loss, validation_accuracy = self.eval()
+            self.validation_losses.append(validation_loss)
+            self.validation_accuracies.append(validation_accuracy)
+            print(f"============================== EPOCH {epoch + 1} =================================")
+            print("Training accuracy %.2f" % (training_accuracy * 100))
+            print("Training loss %.4f" % training_loss)
+            print("Validation accuracy %.2f" % (validation_accuracy * 100))
+            print("Validation loss %.4f" % validation_loss)
+
+    def eval(self, eval_loader=None):
+        self.model.eval()
+        if eval_loader is None:
+            X_val, y_val = next(iter(self.validation_dataloader))
+        else:
+            X_val, y_val = next(iter(eval_loader))
+        with torch.no_grad():
+            X_features = self.feature_maker.torch_fbank_features(X_val)
+            y_pred = torch.argmax(self.model(X_features), dim=1)
+            l = self.loss(self.model(X_features), y_val)
+            accuracy = self.accuracy(y_val, y_pred)
+        return y_pred, y_val, l.item(), accuracy.item()
+
 
