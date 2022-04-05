@@ -180,13 +180,13 @@ class SklearnTrainer():
           print(f"No model with name {model['name']} with alias {alias} exists.")
 
   def train(self, X, y):
-    if self.use_pca:
-      self.pca_transformer.fit(X)
-      X = self.pca_transformer.transform(X)
-
     if self.use_norm:
       self.min_max_scaler.fit_transform(X)
       X = self.min_max_scaler.transform(X)
+
+    if self.use_pca:
+      self.pca_transformer.fit(X)
+      X = self.pca_transformer.transform(X)
 
     for alias, model in self.models_dict.items():
       print(f"Training {alias.upper()}")
