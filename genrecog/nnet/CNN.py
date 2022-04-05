@@ -87,3 +87,30 @@ class VanillaConv1d(torch.nn.Module):
         x = x.view(x.size(0), -1)
         x = self.out_linear(x)
         return x
+
+class VanillaConv2d(torch.nn.Module):
+  def __init__(self):
+    super(VanillaConv2d, self).__init__()
+
+    self.batch_norm = nn.BatchNorm2d(1)
+    self.input_conv = nn.Sequential(
+            nn.Conv2d(
+                in_channels=1,
+                out_channels=128,
+                kernel_size=(32, 32),
+                stride=1,
+                # padding=16,
+            ),
+            nn.BatchNorm2d(num_features=128),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(kernel_size=8),
+        )
+    self.out = nn.Linear(10624, 10)
+
+  def forward(self, x):
+    x = x.unsqueeze(1)
+    x = self.batch_norm(x)
+    x = self.input_conv(x)
+    x = x.view(x.size(0), -1)
+    output = self.out(x)
+    return output
