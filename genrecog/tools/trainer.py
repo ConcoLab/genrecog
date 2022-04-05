@@ -1,11 +1,19 @@
 from genrecog.preprocess.feature import Feature
 import torch
-import seaborn as sn
-import pandas as pd
+import pickle
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
-import pickle
+from sklearn.metrics import accuracy_score
+import pandas as pd
+import seaborn as sn
 
 
 class FbankTrainer():
@@ -145,4 +153,88 @@ class CNNFbankTrainer(FbankTrainer):
             accuracy = self.accuracy(y_val, y_pred)
         return y_pred, y_val, l.item(), accuracy.item()
 
+
+
+class SklearnTrainer():
+  def __init__(self, models = {}, use_pca=True, pca_size=3, use_norm=True) -> None:
+      self.models = models
+      self.use_pca = use_pca
+      self.pca_size = pca_size
+      self.use_norm = use_norm
+      self.pca_transformer = PCA(pca_size)
+      self.min_max_scaler = MinMaxScaler()
+      self.models_dict = {}
+      self.evaluations = None
+      for alias, model in models.items():
+        if model["name"].lower() == "svm":
+          self.models_dict[alias] = SVC(**model['parameters'])
+        elif model["name"].lower() == "decision_tree":
+          self.models_dict[alias] = DecisionTreeClassifier(**model['parameters'])
+        elif model["name"].lower() == "random_forest":
+          self.models_dict[alias] = RandomForestClassifier(**model['parameters'])
+        elif model["name"].lower() == "knn":
+          self.models_dict[alias] = KNeighborsClassifier(**model['parameters'])
+        elif model["name"].lower() == "mlp":
+          self.models_dict[alias] = MLPClassifier(**model['parameters'])
+        else:
+          print(f"No model with name {model['name']} with alias {alias} exists.")
+
+  def train(self, X, y):
+    if self.use_pca:
+      self.pca_transformer.fit(X)
+      X = self.pca_transformer.transform(X)
+
+    if self.use_norm:
+      self.min_max_scaler.fit_transform(X)
+      X = self.min_max_scaler.transform(X)
+
+    for alias, model in self.models_dict.items():
+      print(f"Training {alias.upper()}")
+      print("Model information: ", model)
+      model.fit(X, y)
+
+  def eval(self, X_val, y_val):
+    if self.use_norm:
+      X_val = self.min_max_scaler.transform(X_val)
+
+    if self.use_pca:
+      X_val = self.pca_transformer.transform(X_val)
+
+    self.evaluations = {}
+    for name, model in self.models_dict.items():
+      print(f"Evaluating {name.upper()}")
+      y_pred = model.predict(X_val)
+      self.evaluations[name] = {}
+      self.evaluations[name]['y_pred'] = y_pred
+      self.evaluations[name]['y_val'] = y_val
+      self.evaluations[name]['accuracy'] = accuracy_score(y_val, y_pred)
+
+    print("All models are evaluated.")
+    return self.evaluations
+
+  def classification_report(self):
+    if self.evaluations == None:
+      raise Exception("First call eval() to obtain preds.")
+
+    for alias, model in self.models_dict.items():
+      print(f"CLASSIFICATION REPORT FOR {alias.upper()}:\n")
+      genres = ['country', 'reggae', 'metal', 'pop', 'classical', 'disco', 'hiphop', 'blues', 'jazz', 'rock']
+      print(classification_report(
+          self.evaluations[alias]['y_pred'],
+          self.evaluations[alias]['y_val'],
+          target_names=genres)
+      )
+
+  def plot_confusion_matrix(self):
+    for alias, model in self.models_dict.items():
+      print(f"CONFUSION MATRIX FOR {alias.upper()}:\n")
+      array = confusion_matrix(
+          self.evaluations[alias]['y_pred'],
+          self.evaluations[alias]['y_val'],
+          normalize='true') * 100
+      genres = ['country', 'reggae', 'metal', 'pop', 'classical', 'disco', 'hiphop', 'blues', 'jazz', 'rock']
+      df_cm = pd.DataFrame(array, index=genres, columns=genres)
+      plt.figure(figsize=(10, 7))
+      sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
+      plt.show()
 
