@@ -79,7 +79,7 @@ class FbankTrainer():
         plt.xlabel('epoch')
         plt.ylabel('loss')
         plt.title(title)
-        plt.savefig("images/" + title.replace(" ", "_"))
+        plt.savefig(f"images/{title.replace(' ', '_')}")
 
     def plot_accuracies(self, title):
         """
@@ -93,7 +93,7 @@ class FbankTrainer():
         plt.xlabel('epoch')
         plt.ylabel('accuracy')
         plt.title(title)
-        plt.savefig("images/" + title.replace(" ", "_"))
+        plt.savefig(f"images/{title.replace(' ', '_')}")
 
     def plot_confusion_matrix(self, eval_loader, title):
         """
@@ -110,8 +110,8 @@ class FbankTrainer():
         df_cm = pd.DataFrame(array, index=genres, columns=genres)
         plt.figure(figsize=(10, 7))
         plt.title(title)
-        plt.savefig("images/" + title.replace(" ", "_"))
         sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
+        plt.savefig(f"images/{title.replace(' ', '_')}")
 
     def classification_report(self, eval_loader):
         """
@@ -405,5 +405,5 @@ class SklearnTrainer():
       sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
       plt.show()
       plt.title(alias.upper())
-      plt.savefig("images/" + alias.upper() + "_Norm_" + self.use_norm + "_PCA_" + self.use_pca + "_" + self.pca_size)
+      plt.savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
 
