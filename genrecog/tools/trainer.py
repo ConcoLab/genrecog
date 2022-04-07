@@ -402,9 +402,9 @@ class SklearnTrainer():
       genres = ['country', 'reggae', 'metal', 'pop', 'classical', 'disco', 'hiphop', 'blues', 'jazz', 'rock']
       df_cm = pd.DataFrame(array, index=genres, columns=genres)
       plt.figure(figsize=(10, 7))
-      sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
-      plt.title(alias.upper())
-      plt.savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
+      sn.heatmap(df_cm, annot=True, cmap="YlGnBu").set_title(alias.upper())\
+          .savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
+      # plt.savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
       plt.show()
 
 
