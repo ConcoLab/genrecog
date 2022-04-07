@@ -108,10 +108,10 @@ class FbankTrainer():
         array = confusion_matrix(y_eval.cpu(), y_pred.cpu(), normalize='true') * 100
         genres = ['country', 'reggae', 'metal', 'pop', 'classical', 'disco', 'hiphop', 'blues', 'jazz', 'rock']
         df_cm = pd.DataFrame(array, index=genres, columns=genres)
-        plt.figure(figsize=(10, 7))
-        plt.title(title)
-        sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
+        plt.figure(figsize=(10, 7)).set_title(title)
         plt.savefig(f"images/{title.replace(' ', '_')}")
+        sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
+
 
     def classification_report(self, eval_loader):
         """
@@ -403,8 +403,6 @@ class SklearnTrainer():
       df_cm = pd.DataFrame(array, index=genres, columns=genres)
       plt.figure(figsize=(10, 7))
       sn.heatmap(df_cm, annot=True, cmap="YlGnBu").set_title(alias.upper())
-      # plot.get_figure().savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
-      # plt.savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
       plt.savefig(f"images/{alias.upper()}_Norm_{self.use_norm}_PCA_{self.use_pca}_{self.pca_size}")
       plt.show()
 
