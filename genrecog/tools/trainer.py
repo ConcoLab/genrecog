@@ -406,5 +406,5 @@ class SklearnTrainer():
       sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
       plt.show()
       plt.title(alias.upper())
-      plt.savefig("images/" + alias.upper())
+      plt.savefig("images/" + alias.upper() + "_Norm_" + self.use_norm + "_PCA_" + self.use_pca + "_" + self.pca_size)
 
