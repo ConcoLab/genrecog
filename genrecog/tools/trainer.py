@@ -388,11 +388,10 @@ class SklearnTrainer():
           target_names=genres)
       )
 
-  def plot_confusion_matrix(self, title):
+  def plot_confusion_matrix(self):
     """
     Plots the confusion matrix for each trained model and saves
     the results in image folder.
-    :param title:
     """
     for alias, model in self.models_dict.items():
       print(f"CONFUSION MATRIX FOR {alias.upper()}:\n")
