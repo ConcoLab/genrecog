@@ -1,0 +1,38 @@
+AFTER 100 EPOCHS
+
+              precision    recall  f1-score   support
+
+     country       0.00      0.00      0.00        40
+      reggae       0.00      0.00      0.00        40
+       metal       0.00      0.00      0.00        40
+         pop       0.11      1.00      0.21        40
+   classical       0.67      0.78      0.72        40
+       disco       0.00      0.00      0.00        40
+      hiphop       0.00      0.00      0.00        40
+       blues       0.00      0.00      0.00        40
+        jazz       0.33      0.05      0.09        40
+        rock       0.00      0.00      0.00        40
+
+    accuracy                           0.18       400
+   macro avg       0.11      0.18      0.10       400
+weighted avg       0.11      0.18      0.10       400
+
+
+AFTER 70 EPOCHS
+
+              precision    recall  f1-score   support
+
+     country       0.62      0.75      0.68        40
+      reggae       0.75      0.53      0.62        40
+       metal       0.57      0.70      0.63        40
+         pop       0.88      0.93      0.90        40
+   classical       0.93      0.68      0.78        40
+       disco       0.72      0.72      0.73        40
+      hiphop       0.53      0.47      0.50        40
+       blues       0.57      0.62      0.60        40
+        jazz       0.62      0.70      0.66        40
+        rock       0.41      0.40      0.41        40
+
+    accuracy                           0.65       400
+   macro avg       0.66      0.65      0.65       400
+weighted avg       0.66      0.65      0.65       400
