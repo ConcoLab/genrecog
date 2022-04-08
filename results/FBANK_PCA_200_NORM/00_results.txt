@@ -1,0 +1,183 @@
+
+FBANK_NORMALIZED_PCA_200.ipynb_
+
+Mounted at /content/drive
+
+%%capture
+%cd drive/MyDrive/genrecog/
+%pip install speechbrain
+
+from genrecog.preprocess.preprocessor import Preprocessor
+from genrecog.preprocess.feature import Feature
+from genrecog.tools.trainer import SklearnTrainer
+import torch
+
+# Load dataset
+
+train_preprcessor = Preprocessor('dataset/npz_files/train.npz')
+test_preprcessor = Preprocessor('dataset/npz_files/test.npz')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+X,y = train_preprcessor.as_shuffled_numpy()
+X_test, y_test = test_preprcessor.as_shuffled_numpy()
+
+feature_maker = Feature()
+X_features = feature_maker.numpy_fbank_features(X).reshape(-1,702*40)
+X_test_features = feature_maker.numpy_fbank_features(X_test).reshape(-1,702*40)
+
+models = {
+    "mlp": {
+        "name": "mlp",
+        "parameters": {
+            "hidden_layer_sizes": (128,128,128,128,128),
+            "solver": "adam",
+            "max_iter": 100,
+            "early_stopping": True,
+         }
+    },
+    "svm_ovo": {
+          "name": "svm",
+          "parameters": {
+            "decision_function_shape":"ovo"
+          }
+    },
+    "svm_ovr": {
+          "name": "svm",
+          "parameters": {
+            "decision_function_shape":"ovr"
+          }
+    },
+    "decision_tree": {
+          "name": "decision_tree",
+          "parameters": {
+          }
+    },
+    "random_forest": {
+          "name": "random_forest",
+          "parameters": {
+          }
+    },
+
+}
+
+trainer = SklearnTrainer(models=models, use_norm=True, use_pca=True, pca_size=200)
+trainer.train(X_features, y)
+
+Training MLP
+Model information:  MLPClassifier(early_stopping=True, hidden_layer_sizes=(128, 128, 128, 128, 128),
+              max_iter=100)
+Training SVM_OVO
+Model information:  SVC(decision_function_shape='ovo')
+Training SVM_OVR
+Model information:  SVC()
+Training DECISION_TREE
+Model information:  DecisionTreeClassifier()
+Training RANDOM_FOREST
+Model information:  RandomForestClassifier()
+
+evaluations = trainer.eval(X_test_features, y_test)
+
+Evaluating MLP
+Evaluating SVM_OVO
+Evaluating SVM_OVR
+Evaluating DECISION_TREE
+Evaluating RANDOM_FOREST
+All models are evaluated.
+
+CLASSIFICATION REPORT FOR MLP:
+
+              precision    recall  f1-score   support
+
+     country       0.60      0.44      0.51        54
+      reggae       0.30      0.35      0.32        34
+       metal       0.68      0.44      0.53        61
+         pop       0.78      0.86      0.82        36
+   classical       0.65      1.00      0.79        26
+       disco       0.23      0.29      0.25        31
+      hiphop       0.28      0.37      0.31        30
+       blues       0.30      0.29      0.29        42
+        jazz       0.72      0.55      0.62        53
+        rock       0.30      0.36      0.33        33
+
+    accuracy                           0.48       400
+   macro avg       0.48      0.50      0.48       400
+weighted avg       0.51      0.48      0.49       400
+
+CLASSIFICATION REPORT FOR SVM_OVO:
+
+              precision    recall  f1-score   support
+
+     country       0.57      0.38      0.46        61
+      reggae       0.38      0.35      0.36        43
+       metal       0.62      0.43      0.51        58
+         pop       0.97      0.85      0.91        46
+   classical       0.93      0.90      0.91        41
+       disco       0.28      0.41      0.33        27
+      hiphop       0.20      0.57      0.30        14
+       blues       0.25      0.42      0.31        24
+        jazz       0.45      0.50      0.47        36
+        rock       0.35      0.28      0.31        50
+
+    accuracy                           0.50       400
+   macro avg       0.50      0.51      0.49       400
+weighted avg       0.55      0.50      0.51       400
+
+CLASSIFICATION REPORT FOR SVM_OVR:
+
+              precision    recall  f1-score   support
+
+     country       0.57      0.38      0.46        61
+      reggae       0.38      0.35      0.36        43
+       metal       0.62      0.43      0.51        58
+         pop       0.97      0.85      0.91        46
+   classical       0.93      0.90      0.91        41
+       disco       0.28      0.41      0.33        27
+      hiphop       0.20      0.57      0.30        14
+       blues       0.25      0.42      0.31        24
+        jazz       0.45      0.50      0.47        36
+        rock       0.35      0.28      0.31        50
+
+    accuracy                           0.50       400
+   macro avg       0.50      0.51      0.49       400
+weighted avg       0.55      0.50      0.51       400
+
+CLASSIFICATION REPORT FOR DECISION_TREE:
+
+              precision    recall  f1-score   support
+
+     country       0.25      0.29      0.27        34
+      reggae       0.12      0.17      0.14        29
+       metal       0.47      0.30      0.37        64
+         pop       0.53      0.78      0.63        27
+   classical       0.60      0.55      0.57        44
+       disco       0.17      0.23      0.20        31
+      hiphop       0.33      0.27      0.29        49
+       blues       0.10      0.13      0.11        31
+        jazz       0.45      0.42      0.43        43
+        rock       0.10      0.08      0.09        48
+
+    accuracy                           0.31       400
+   macro avg       0.31      0.32      0.31       400
+weighted avg       0.33      0.31      0.31       400
+
+CLASSIFICATION REPORT FOR RANDOM_FOREST:
+
+              precision    recall  f1-score   support
+
+     country       0.65      0.43      0.51        61
+      reggae       0.25      0.59      0.35        17
+       metal       0.70      0.34      0.46        82
+         pop       0.93      0.80      0.86        46
+   classical       0.97      0.60      0.74        65
+       disco       0.25      0.45      0.32        22
+      hiphop       0.28      0.55      0.37        20
+       blues       0.12      0.22      0.16        23
+        jazz       0.38      0.58      0.45        26
+        rock       0.25      0.26      0.26        38
+
+    accuracy                           0.48       400
+   macro avg       0.48      0.48      0.45       400
+weighted avg       0.60      0.48      0.51       400
+
+trainer.plot_confusion_matrix()
+
