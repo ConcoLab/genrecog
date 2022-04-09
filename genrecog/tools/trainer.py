@@ -79,7 +79,7 @@ class FbankTrainer():
         plt.xlabel('epoch')
         plt.ylabel('loss')
         plt.title(title)
-        plt.savefig(f"images/{title.replace(' ', '_')}")
+        plt.savefig(f"results/{title.replace(' ', '_')}")
 
     def plot_accuracies(self, title):
         """
@@ -93,7 +93,7 @@ class FbankTrainer():
         plt.xlabel('epoch')
         plt.ylabel('accuracy')
         plt.title(title)
-        plt.savefig(f"images/{title.replace(' ', '_')}")
+        plt.savefig(f"results/{title.replace(' ', '_')}")
 
     def plot_confusion_matrix(self, eval_loader, title):
         """
@@ -108,9 +108,9 @@ class FbankTrainer():
         array = confusion_matrix(y_eval.cpu(), y_pred.cpu(), normalize='true') * 100
         genres = ['country', 'reggae', 'metal', 'pop', 'classical', 'disco', 'hiphop', 'blues', 'jazz', 'rock']
         df_cm = pd.DataFrame(array, index=genres, columns=genres)
-        plt.figure(figsize=(10, 7)).set_title(title)
-        plt.savefig(f"images/{title.replace(' ', '_')}")
-        sn.heatmap(df_cm, annot=True, cmap="YlGnBu")
+        plt.figure(figsize=(10, 7))
+        sn.heatmap(df_cm, annot=True, cmap="YlGnBu").set_title(title)
+        plt.savefig(f"results/{title.replace(' ', '_')}")
 
 
     def classification_report(self, eval_loader):
