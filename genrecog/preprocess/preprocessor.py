@@ -84,7 +84,8 @@ class Preprocessor:
         """
             Gets the npz file location which is created by the convertor and
             allows generating numpy or torch tensor for further processing.
-        :param path:
+        :param path: str
+            Path to the npz file
         """
         self.path = path
 

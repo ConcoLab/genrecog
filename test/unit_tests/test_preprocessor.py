@@ -15,10 +15,7 @@ def before_test(tmpdir):
 def test_preprocessor(tmpdir):
     np_file = before_test(tmpdir)
     preprocessor = Preprocessor(np_file)
-    assert preprocessor.X.shape == (10, 16_000)
-    assert preprocessor.y.shape == (10,)
-    assert isinstance(preprocessor.X, (np.ndarray, np.float32))
-    assert isinstance(preprocessor.y, (np.ndarray, np.int64))
+    assert preprocessor.path == os.path.join(tmpdir, "random.npz")
 
 
 def test_as_torch(tmpdir):
@@ -44,8 +41,8 @@ def test_as_shuffled_numpy(tmpdir):
     np_file = before_test(tmpdir)
     preprocessor = Preprocessor(np_file)
     X, y = preprocessor.as_shuffled_numpy()
-    assert not (X == preprocessor.X).all()
-    assert not (y == preprocessor.y).all()
+    assert (X.shape == (10, 16_000))
+    assert (y.shape == (10,))
     assert isinstance(X, (np.ndarray, np.float32))
     assert isinstance(y, (np.ndarray, np.int64))
 
@@ -54,7 +51,7 @@ def test_as_shuffled_torch(tmpdir):
     np_file = before_test(tmpdir)
     preprocessor = Preprocessor(np_file)
     X, y = preprocessor.as_shuffled_torch()
-    assert not (X == preprocessor.X)
-    assert not (y == preprocessor.y)
+    assert (X.shape == (10, 16_000))
+    assert (y.shape == (10,))
     assert torch.is_tensor(X)
     assert torch.is_tensor(y)
