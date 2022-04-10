@@ -1,2 +1,2 @@
-# comp6321
-Machine Learning Project
+# Genre Recognition on GTZAN
+
