@@ -6,6 +6,7 @@ Authors
 
 import torch
 
+
 class VanillaRNN(torch.nn.Module):
     def __init__(self, input_size=40, time_sequence=702, hidden_size=128, num_layers=5, output_dim=10, use_mean=False):
         """
@@ -146,4 +147,3 @@ class GRU(torch.nn.Module):
         z = self.batch_norm_hidden(z)
         out = self.linear(z)
         return out
-
