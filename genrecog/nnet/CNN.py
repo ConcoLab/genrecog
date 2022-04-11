@@ -54,11 +54,11 @@ class Conv1d(nn.Module):
 
     def forward(self, x):
         """
-        :param x: torch,Tensor
+            Forwards input features through nn pipeline
+        :param x: torch.Tensor
         :return: torch.Tensor
-            outputs the nn result
         """
-        x = x.transpose(-1,1)
+        x = x.transpose(-1, 1)
         x = self.batch_norm(x)
         x = self.input_layer(x)
         x = self.hidden_layer_1(x)
@@ -119,7 +119,12 @@ class VanillaConv1d(torch.nn.Module):
         )
 
     def forward(self, x):
-        x = x.transpose(-1,1)
+        """
+            Forwards input features through nn pipeline
+        :param x: torch.Tensor
+        :return: torch.Tensor
+        """
+        x = x.transpose(-1, 1)
         x = self.batch_norm(x)
         x = self.input_layer(x)
         x = self.hidden_layer(x)
@@ -131,8 +136,9 @@ class VanillaConv1d(torch.nn.Module):
         x = self.out_linear(x)
         return x
 
+
 class VanillaConv2d(torch.nn.Module):
-      def __init__(self):
+    def __init__(self):
         """
             Creates a simple conv2d architecture as mentioned in the report.
             It cotains only one layer of Conv2d
@@ -141,20 +147,25 @@ class VanillaConv2d(torch.nn.Module):
 
         self.batch_norm = nn.BatchNorm2d(1)
         self.input_conv = nn.Sequential(
-                nn.Conv2d(
-                    in_channels=1,
-                    out_channels=128,
-                    kernel_size=(32, 32),
-                    stride=1,
-                    # padding=16,
-                ),
-                nn.BatchNorm2d(num_features=128),
-                nn.LeakyReLU(),
-                nn.MaxPool2d(kernel_size=8),
-            )
+            nn.Conv2d(
+                in_channels=1,
+                out_channels=128,
+                kernel_size=(32, 32),
+                stride=1,
+                # padding=16,
+            ),
+            nn.BatchNorm2d(num_features=128),
+            nn.LeakyReLU(),
+            nn.MaxPool2d(kernel_size=8),
+        )
         self.out = nn.Linear(10624, 10)
 
-      def forward(self, x):
+    def forward(self, x):
+        """
+            Forwards input features through nn pipeline
+        :param x: torch.Tensor
+        :return: torch.Tensor
+        """
         x = x.unsqueeze(1)
         x = self.batch_norm(x)
         x = self.input_conv(x)
