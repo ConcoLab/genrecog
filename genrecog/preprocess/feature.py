@@ -43,4 +43,3 @@ class Feature:
         """
         X = torch.from_numpy(X)
         return self.feature_maker(X).cpu().detach().numpy()
-

@@ -9,6 +9,7 @@ import numpy as np
 from scipy.io.wavfile import read, write
 from os import walk
 
+
 class Convertor:
     def __init__(self, path):
         """
@@ -132,7 +133,3 @@ class Preprocessor:
         """
         X, y = self.as_shuffled_numpy()
         return torch.from_numpy(X), torch.from_numpy(y)
-
-
-
-
